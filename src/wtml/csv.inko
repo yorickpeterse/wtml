@@ -21,8 +21,8 @@ fn parse(
   loop {
     match try Transaction.parse(parser) {
       case Some({ @description = desc, @amount = amount }) -> {
-        let key = config.mapping.opt(desc).or(desc)
-        let cur = amounts.opt(key).or(0.0)
+        let key = config.mapping.get(desc).or(desc)
+        let cur = amounts.get(key).or(0.0)
 
         amounts.set(key, cur + amount)
       }

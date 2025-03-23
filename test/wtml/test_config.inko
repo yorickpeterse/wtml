@@ -6,7 +6,7 @@ fn pub tests(t: mut Tests) {
     let path = 'fixtures/config/config.json'.to_path
     let conf = try Config.load(path)
 
-    t.equal(conf.mapping.opt('original name'), Option.Some('new name'))
+    t.equal(conf.mapping.get('original name'), Result.Ok('new name'))
     Result.Ok(nil)
   })
 
@@ -19,7 +19,7 @@ fn pub tests(t: mut Tests) {
   t.ok('Config.default with an existing configuration file', fn (t) {
     let conf = try Config.default('fixtures/config'.to_path)
 
-    t.equal(conf.mapping.opt('original name'), Option.Some('new name'))
+    t.equal(conf.mapping.get('original name'), Result.Ok('new name'))
     Result.Ok(nil)
   })
 

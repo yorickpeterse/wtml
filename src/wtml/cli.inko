@@ -14,7 +14,7 @@ fn show_help[T: mut + Write](options: ref Options, output: mut T) {
     .options(options)
     .to_string
 
-  let _ = output.write_string(help)
+  let _ = output.write(help)
 }
 
 fn pub run[T: mut + Write](
@@ -34,8 +34,8 @@ fn pub run[T: mut + Write](
     return Result.Ok(nil)
   }
 
-  let path = match matches.remaining.opt(0) {
-    case Some(v) -> v.to_path
+  let path = match matches.remaining.get(0) {
+    case Ok(v) -> v.to_path
     case _ -> {
       show_help(opts, output)
       return Result.Ok(nil)
@@ -50,9 +50,9 @@ fn pub run[T: mut + Write](
 
   let pairs = try parse(path, conf).map_error(fn (e) { e.to_string })
 
-  pairs.into_iter.each(fn (kv) {
-    output.print('${kv.0}\t${kv.1.round(2).to_string.replace('.', ',')}')
-  })
+  for (name, val) in pairs {
+    output.print('${name}\t${val.round(2).to_string.replace('.', ',')}')
+  }
 
   Result.Ok(nil)
 }
