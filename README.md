@@ -11,20 +11,13 @@ money on.
 
 ## Usage
 
-For one-off runs:
-
 ```inko
-inko run src/main.inko path/to/the/file.csv
+inko build --release
+./build/release/wtml path/to/the/file.csv
 ```
 
 The output is a list of lines with two columns: a description and the amount,
-separated by a tab. You can also build the executable once and dump it in your
-PATH. For example:
-
-```inko
-inko build -o ~/bin/wtml
-~/bin/wtml path/to/the/file.csv
-```
+separated by a tab.
 
 ## Configuration
 
