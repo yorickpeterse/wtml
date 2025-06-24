@@ -1,28 +1,20 @@
 import std.env (arguments, working_directory)
-import std.optparse (Help, Options)
+import std.optparse (Options)
 import std.stdio (Stderr, Stdout)
 import std.sys (exit)
 import wtml.config (Config)
 import wtml.csv (parse)
 
 fn show_help(options: ref Options, output: mut Stdout) {
-  let help = Help
-    .new('wtml [CSV FILE]')
-    .description(
-      'Provides an overview of monthly costs based on an ING CSV file.',
-    )
-    .section('Options')
-    .options(options)
-    .into_string
-
-  let _ = output.write(help)
+  let _ = output.write(options.to_string)
 }
 
 fn run -> Result[Nil, String] {
   let out = Stdout.new
-  let opts = Options.new
+  let opts = Options.new('wtml')
   let pwd = working_directory.or_else(fn (_) { '.'.to_path })
 
+  opts.description = 'Provides an overview of monthly costs based on an ING CSV file.'
   opts.flag('h', 'help', 'Show this help message')
   opts.single('c', 'config', 'PATH', 'The configuration file to use')
 
