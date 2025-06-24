@@ -1,7 +1,7 @@
 import std.csv (Parser)
 import std.fs.file (ReadOnlyFile)
 import std.fs.path (Path)
-import std.io (Read)
+import std.io (Error, Read)
 import wtml.config (Config)
 
 fn parse(
@@ -46,8 +46,8 @@ type inline Transaction {
   let @description: String
   let @amount: Float
 
-  fn static parse[T: mut + Read](
-    parser: mut Parser[T],
+  fn static parse[T: mut + Read[Error]](
+    parser: mut Parser[T, Error],
   ) -> Result[Option[Transaction], String] {
     let desc = try parser.skip_column.then(fn (_) { parser.column }).map_error(
       fn (e) { e.to_string },
