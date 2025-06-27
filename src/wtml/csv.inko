@@ -36,7 +36,7 @@ fn parse(
     }
   }
 
-  let pairs = amounts.into_iter.map(fn (kv) { (kv.key, kv.value) }).to_array
+  let pairs = amounts.into_iter.to_array
 
   pairs.sort_by(fn (a, b) { b.1.cmp(a.1) })
   Result.Ok(pairs)
