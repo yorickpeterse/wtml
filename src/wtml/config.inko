@@ -1,6 +1,6 @@
 import std.fs.file (ReadOnlyFile)
 import std.fs.path (Path)
-import std.json (PullParser)
+import std.json (Json)
 
 type Config {
   let @mapping: Map[String, String]
@@ -8,14 +8,17 @@ type Config {
   fn static load(path: Path) -> Result[Config, String] {
     let conf = Config.new
     let file = try ReadOnlyFile.new(path).map_error(fn (e) { e.to_string })
-    let parser = PullParser.new(file)
+    let map = match Json.parse(file).map_error(fn (e) { e.to_string }) {
+      case Ok(Object(v)) -> v
+      case Ok(_) -> throw 'the configuration must be a JSON object'
+      case Error(e) -> throw e.to_string
+    }
 
-    try parser
-      .keys(fn (_pos, key) {
-        conf.mapping.set(key, try parser.string)
-        Result.Ok(nil)
-      })
-      .map_error(fn (e) { e.to_string })
+    for (key, val) in map {
+      let String(val) = val else throw 'the value of each key must be a string'
+
+      conf.mapping.set(key, val)
+    }
 
     Result.Ok(conf)
   }
